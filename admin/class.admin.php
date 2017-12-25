@@ -54,7 +54,6 @@ class AdminAdverifierCriteria {
     else {
       include_once 'criteria.form.php';
     }
-
   }
 
   public function getCriteria() {

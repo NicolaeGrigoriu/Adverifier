@@ -41,7 +41,6 @@ class Serializer {
   private function save() {
     if ($_POST['type'] == 'terms') {
       $cid = sanitize_text_field($_POST['cid']);
-
       $ro = sanitize_text_field($_POST['adverifier-term-ro']);
       $ru = sanitize_text_field($_POST['adverifier-term-ru']);
       $en = sanitize_text_field($_POST['adverifier-term-en']);

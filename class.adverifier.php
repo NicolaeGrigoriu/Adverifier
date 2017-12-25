@@ -36,6 +36,7 @@ class Adverifier {
     self::create_db_table_criteria_ads( $wpdb );
   }
 
+
   private static function create_user_post() {
     $post = get_posts( array( 'name' => 'adverify' ) );
     if (empty($post)) {
@@ -44,7 +45,8 @@ class Adverifier {
         'post_name' => 'adverify',
         'post_content' => 'Some custom content',
         'post_status' => 'publish',
-        'post_author' => 1
+        'post_author' => 1,
+        'comment_status' => 'closed'
       );
       $post_id = wp_insert_post($new_post);
       if ($post_id) {
@@ -126,7 +128,7 @@ class Adverifier {
   private static function delete_user_post() {
     $posts = get_posts( array( 'post_name' => 'adverify' ) );
     foreach ($posts as $post) {
-      if (!empty($post)) {
+      if (!empty($post) && $post->post_name == 'adverify') {
         wp_delete_post($post->ID);
       }
     }
