@@ -11,27 +11,64 @@ Author URI: https://automattic.com/wordpress-plugins/
 License: GPLv2 or later
 Text Domain: advert_verifier
 */
-define('ADVERIFIER__PLUGIN_DIR', plugin_dir_path(__FILE__));
 
-require_once(ADVERIFIER__PLUGIN_DIR . 'class.adverifier.php');
-require_once(ADVERIFIER__PLUGIN_DIR . 'admin/class.admin.php');
-require_once(ADVERIFIER__PLUGIN_DIR . 'admin/class.serializer.php');
+function create_ads_post_type() {
+  // Labels array added inside the function and precedes args array
+  $labels = array(
+    'name'               => _x( 'Ads', 'post type general name' ),
+    'singular_name'      => _x( 'Ad', 'post type singular name' ),
+    'add_new'            => _x( 'Add New', 'Ad' ),
+    'add_new_item'       => __( 'Add New Ad' ),
+    'edit_item'          => __( 'Edit Ad' ),
+    'new_item'           => __( 'New Ad' ),
+    'all_items'          => __( 'All Ads' ),
+    'view_item'          => __( 'View Ad' ),
+    'search_items'       => __( 'Search ads' ),
+    'not_found'          => __( 'No ads found' ),
+    'not_found_in_trash' => __( 'No ads found in the Trash' ),
+    'parent_item_colon'  => '',
+    'menu_name'          => 'Ads'
+  );
 
-if (!function_exists('add_action')) {
-  echo 'Hi there!  I\'m just a plugin, not much I can do when called directly.';
-  exit;
+  // args array
+
+  $args = array(
+    'labels'        => $labels,
+    'description'   => 'Find ads with discriminatory content',
+    'public'        => true,
+    'menu_position' => 4,
+    'supports'      => array( 'title', 'editor', 'thumbnail', 'excerpt' ),
+    'has_archive'   => true,
+  );
+
+  register_post_type( 'ads', $args );
+}
+add_action( 'init', 'create_ads_post_type' );
+
+//Creating custom categories for Ads custom post
+function ad_categories_definition() {
+  // Labels array
+  $labels = array(
+    'name'              => _x( 'Ads Categories', 'taxonomy general name' ),
+    'singular_name'     => _x( 'Ad  Category', 'taxonomy singular name' ),
+    'search_items'      => __( 'Search Ad Categories' ),
+    'all_items'         => __( 'All Ad Categories' ),
+    'parent_item'       => __( 'Parent Ad Category' ),
+    'parent_item_colon' => __( 'Parent Ad Category:' ),
+    'edit_item'         => __( 'Edit Ad Category' ),
+    'update_item'       => __( 'Update Ad Category' ),
+    'add_new_item'      => __( 'Add New Ad Category' ),
+    'new_item_name'     => __( 'New Ad Category' ),
+    'menu_name'         => __( ' Ad Categories' ),
+  );
+
+  // Args array.
+  $args = array(
+    'labels' => $labels,
+    'hierarchical' => true,
+  );
+
+  register_taxonomy( 'ad_category', 'ads', $args );
 }
 
-register_activation_hook(__FILE__, array('Adverifier', 'plugin_activation'));
-register_deactivation_hook(__FILE__, array('Adverifier', 'plugin_deactivation'));
-
-add_action('init', array('Adverifier', 'init'));
-add_action('plugins_loaded', 'adverifier_admin_page');
-
-function adverifier_admin_page() {
-  $serializer = new Serializer();
-  $serializer->init();
-
-  $admin_page = new AdminAdverifier(new AdminAdverifierCriteria($serializer), new AdminAdverifierAds());
-  $admin_page->init();
-}
+add_action( 'init', 'ad_categories_definition', 0 );
