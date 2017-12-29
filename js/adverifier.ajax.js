@@ -1,6 +1,4 @@
 jQuery(document).ready(function ($) {
-  // Move form inside the content body.
-  $('#adverifier-wrapper').replaceWith($('#adverifier-form'));
   $('#adverifier-modal-results').dialog({
     autoOpen: false,
     minHeight: 200
@@ -8,11 +6,13 @@ jQuery(document).ready(function ($) {
   $('#adverifier-form-submit').on('click', function (event) {
     event.preventDefault();
     var stat = {};
-    // Content is validated here.
-    Object.keys(adverifier.categories).forEach(function (category) {
+    Object.values(adverifier.categories).forEach(function (category) {
+      // Content is validated here.
       var content = $('#adverifier-form-content').val();
-      var regExp = new RegExp("(<=\\s|\\b)" + category + "(?=[]\\b|\\s|$)", "gi");
+      // var regExp = new RegExp("(<=\\s|\\b)" + category + "(?=[]\\b|\\s|$)", "gi");
+      var regExp = new RegExp("(" + category + ")", "gi");
       stat[category] = (content.match(regExp) || []).length;
+      //(^\|[ \n\r\t.,'\"\+!?-]+)(програмни)([ \n\r\t.,'\"\+!?-]+\|$)
     });
 
     // Open popup with loader.

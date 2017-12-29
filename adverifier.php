@@ -82,10 +82,11 @@ add_shortcode('ad_post_form', 'ad_post_form_shortcode');
  */
 function ad_post_form_shortcode() {
   wp_register_script();
+  wp_enqueue_script( 'Adverifier', plugins_url( 'js/adverifier.form.js', __FILE__ ), array(), null, true);
+
   static $loaded = false;
   if (!$loaded) {
     $loaded = true;
-
     print ad_post_form();
   }
 
@@ -112,7 +113,7 @@ function ad_post_form_shortcode() {
 
     $aid = 123;
     if ($aid) {
-      wp_enqueue_script( 'ajax-script', plugins_url( 'adverifier.js', __FILE__ ), array('jquery'), null, true);
+      wp_enqueue_script( 'ajax-script', plugins_url( 'js/adverifier.ajax.js', __FILE__ ), array('jquery'), null, true);
       wp_localize_script( 'ajax-script', 'adverifier', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) , 'aid' => $aid, 'categories' => $categories) );
     }
   }
