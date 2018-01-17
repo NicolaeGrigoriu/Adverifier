@@ -4,7 +4,6 @@ jQuery(document).ready(function ($) {
     minHeight: 200
   });
   $('#adverifier-form-submit').on('click', function (event) {
-    event.preventDefault();
     var stat = {};
     Object.values(adverifier.categories).forEach(function (category) {
       // Content is validated here.
@@ -32,5 +31,6 @@ jQuery(document).ready(function ($) {
         $('#adverifier-modal-results').find('.loader').replaceWith(response);
       }
     });
+    event.preventDefault();
   });
 });

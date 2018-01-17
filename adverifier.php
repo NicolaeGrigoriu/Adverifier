@@ -83,6 +83,7 @@ add_shortcode('ad_post_form', 'ad_post_form_shortcode');
 function ad_post_form_shortcode() {
   wp_register_script();
   wp_enqueue_script( 'Adverifier', plugins_url( 'js/adverifier.form.js', __FILE__ ), array(), null, true);
+  wp_enqueue_script( 'ajax-script', plugins_url( 'js/adverifier.ajax.js', __FILE__ ), array('jquery'), null, true);
 
   static $loaded = false;
   if (!$loaded) {
@@ -91,7 +92,10 @@ function ad_post_form_shortcode() {
   }
 
   static $submitted = false;
-  if (isset( $_POST['adverifier_form_submitted'] ) && wp_verify_nonce($_POST['adverifier_form_submitted'], 'adverifier_form_submit') && !$submitted) {
+  $categories = get_terms(array('taxonomy' => 'ad_category', 'hide_empty' => false,));
+  $categories = adverifier_filter_terms($categories);
+  $aid = FALSE;
+  if (isset( $_POST['adverifier_form_submitted'] ) && !$submitted) {
     $submitted = true;
     $content = strip_tags(trim($_POST['adverifier_form_content']));
     $title = __('Ad-' . time() . '-' . date('d-m-Y H:i:s'));
@@ -104,18 +108,12 @@ function ad_post_form_shortcode() {
       'post_type' => 'ads',
     );
 
-//    $aid = wp_insert_post($ad); // Node is saved here.
-//    update_post_meta ( $ad_id,'anonymous_user',$suq_quote_author);
+    $aid = wp_insert_post($ad); // Node is saved here.
+//    update_post_meta ( $aid,'anonymous_user',$suq_quote_author);
+  }
 
-    // Perform post validation.
-    $categories = get_terms(array('taxonomy' => 'ad_category', 'hide_empty' => false,));
-    $categories = adverifier_filter_terms($categories);
-
-    $aid = 123;
-    if ($aid) {
-      wp_enqueue_script( 'ajax-script', plugins_url( 'js/adverifier.ajax.js', __FILE__ ), array('jquery'), null, true);
-      wp_localize_script( 'ajax-script', 'adverifier', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) , 'aid' => $aid, 'categories' => $categories) );
-    }
+  if ($aid) {
+    wp_localize_script( 'ajax-script', 'adverifier', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) , 'aid' => $aid, 'categories' => $categories) );
   }
 }
 
