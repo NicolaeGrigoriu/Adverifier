@@ -83,6 +83,7 @@ add_shortcode('ad_post_form', 'ad_post_form_shortcode');
 function ad_post_form_shortcode() {
   wp_register_script();
   wp_enqueue_script( 'Adverifier', plugins_url( 'js/adverifier.form.js', __FILE__ ), array(), null, true);
+  wp_enqueue_script( 'Highlighter', plugins_url( 'js/highlight.js', __FILE__ ), array(), null, true);
 
   static $loaded = false;
   if (!$loaded) {
@@ -90,33 +91,13 @@ function ad_post_form_shortcode() {
     print ad_post_form();
   }
 
-  static $submitted = false;
-  if (isset( $_POST['adverifier_form_submitted'] ) && wp_verify_nonce($_POST['adverifier_form_submitted'], 'adverifier_form_submit') && !$submitted) {
-    $submitted = true;
-    $content = strip_tags(trim($_POST['adverifier_form_content']));
-    $title = __('Ad-' . time() . '-' . date('d-m-Y H:i:s'));
+  $categories = get_terms(array('taxonomy' => 'ad_category', 'hide_empty' => false,));
+  $categories = adverifier_filter_terms($categories);
 
-    $ad = array(
-      'post_title' => $title,
-      'post_content' => $content,
-      'post_status' => 'private',
-      'post_author' => 1,
-      'post_type' => 'ads',
-    );
-
-//    $aid = wp_insert_post($ad); // Node is saved here.
-//    update_post_meta ( $ad_id,'anonymous_user',$suq_quote_author);
-
-    // Perform post validation.
-    $categories = get_terms(array('taxonomy' => 'ad_category', 'hide_empty' => false,));
-    $categories = adverifier_filter_terms($categories);
-
-    $aid = 123;
-    if ($aid) {
-      wp_enqueue_script( 'ajax-script', plugins_url( 'js/adverifier.ajax.js', __FILE__ ), array('jquery'), null, true);
-      wp_localize_script( 'ajax-script', 'adverifier', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) , 'aid' => $aid, 'categories' => $categories) );
-    }
-  }
+  wp_localize_script( 'Adverifier', 'adverifier', array(
+    'categories' => $categories,
+    'ajax_url' => admin_url( 'admin-ajax.php' ),
+  ) );
 }
 
 /**
@@ -149,7 +130,8 @@ function ad_post_form() {
  * Load jQuery UI scripts for the modal window display.
  */
 function adverifier_load_scripts() {
-  wp_enqueue_style('adverifier-css', plugins_url('adverifier.css', __FILE__));
+  wp_enqueue_style('adverifier-css', plugins_url('css/adverifier.css', __FILE__));
+  wp_enqueue_style('highlight-css', plugins_url('css/highlight.css', __FILE__));
   wp_register_script( 'jQuery', 'http://code.jquery.com/jquery-1.11.1.min.js', null, null, true );
   wp_enqueue_script('jQuery');
   wp_register_script( 'jQueryUI', 'http://code.jquery.com/ui/1.11.1/jquery-ui.min.js', null, null, true );
@@ -181,8 +163,8 @@ add_action( 'wp_ajax_nopriv_adverifier_save_statistics', 'adverifier_save_statis
  * Ajax callback to save data to statistics table and process message for the popup.
  */
 function adverifier_save_statistics() {
-  if (!empty($_POST['statistics'])) {
-    $data = array_filter($_POST['statistics']);
+  if (!empty($_POST['result'])) {
+    $data = array_filter($_POST['result']);
 
     // Prepare result message.
     $output = '<div id="adverifier-result-message">';
@@ -196,10 +178,31 @@ function adverifier_save_statistics() {
     }
     $output .= "$message</div>";
 
+    $aid = adverifier_save_ad( $_POST['content'] );
+
     // Save data to tables
-    $data['aid'] = $_POST['aid'];
+    $data['aid'] = $aid;
 
     print $output;
   }
   exit();
+}
+
+/**
+ * Save posted ad for further processing.
+ */
+function adverifier_save_ad($content) {
+  $title = __('Ad-' . time() . '-' . date('d-m-Y H:i:s'));
+
+  $ad = array(
+    'post_title' => $title,
+    'post_content' => $content,
+    'post_status' => 'private',
+    'post_author' => 1,
+    'post_type' => 'ads',
+  );
+
+  $aid = wp_insert_post($ad);
+
+  return $aid;
 }
