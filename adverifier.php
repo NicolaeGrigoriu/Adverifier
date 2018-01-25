@@ -93,7 +93,6 @@ function ad_post_form_shortcode() {
 
   $categories = get_terms(array('taxonomy' => 'ad_category', 'hide_empty' => false,));
   $categories = adverifier_filter_terms($categories);
-
   wp_localize_script( 'Adverifier', 'adverifier', array(
     'categories' => $categories,
     'ajax_url' => admin_url( 'admin-ajax.php' ),
@@ -150,7 +149,7 @@ function adverifier_load_scripts() {
 function adverifier_filter_terms($categories) {
   $terms = array();
   foreach ($categories as $category) {
-    $terms[$category->slug] = $category->name;
+    $terms[$category->term_id] = $category->name;
   }
 
   return $terms;
@@ -179,9 +178,7 @@ function adverifier_save_statistics() {
     $output .= "$message</div>";
 
     $aid = adverifier_save_ad( $_POST['content'] );
-
-    // Save data to tables
-    $data['aid'] = $aid;
+    wp_set_object_terms( $aid, array_keys($data), 'ad_category', TRUE );
 
     print $output;
   }
@@ -200,6 +197,7 @@ function adverifier_save_ad($content) {
     'post_status' => 'private',
     'post_author' => 1,
     'post_type' => 'ads',
+    'post_category'
   );
 
   $aid = wp_insert_post($ad);

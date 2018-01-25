@@ -9,24 +9,30 @@ jQuery(document).ready(function ($) {
   });
   $form.submit(function(event) {
     event.preventDefault();
-    let stat = {};
-    // Content is validated here.
     let $formContent = $('#adverifier-form-content');
     let content = $formContent.val();
-    Object.values(adverifier.categories).forEach(function (category) {
-      let strLower = category.toLowerCase();
-      this.statistics[strLower] = 0;
-      for (let i = 0; i < this.content.length; i++) {
-        if (this.content[i].startsWith(strLower)) {
-          this.statistics[strLower]++;
+
+    // Content is validated here.
+    let contentArr = content.toLowerCase().split(' ');
+    let stat = {};
+    for (let cid in adverifier.categories) {
+      if (adverifier.categories.hasOwnProperty(cid)) {
+        let category = adverifier.categories[cid].toLowerCase();
+        stat[cid] = 0;
+        for (let i = 0; i < contentArr.length; i++) {
+          let haystack = removeAccents(contentArr[i]);
+          let needle = removeAccents(category);
+          if (haystack.startsWith(needle)) {
+            stat[cid]++;
+          }
         }
       }
-    }, {content: content.toLowerCase().split(' '), statistics: stat});
+    }
 
     // Convert object properties to array values.
     let arr = Object.keys(adverifier.categories).map(function (key) { return adverifier.categories[key]; });
-    // Highlight matched words.
 
+    // Highlight matched words.
     $formContent.highlightWithinTextarea({
       highlight: arr
     });
@@ -50,4 +56,18 @@ jQuery(document).ready(function ($) {
       }
     });
   });
+
+  function removeAccents(str) {
+    let convMap = {
+      'ă': 'a',
+      'â': 'a',
+      'î': 'i',
+      'ş': 's',
+      'ţ': 't'
+    };
+    for (let i in convMap) {
+      str = str.replace(new RegExp(i, "g"), convMap[i]);
+    }
+    return str;
+  }
 });

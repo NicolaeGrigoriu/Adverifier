@@ -210,13 +210,28 @@
       let inputLower = input.toLowerCase();
       let words = inputLower.split(' ');
       for (let i = 0; i < words.length; i++) {
-        if (words[i].startsWith(strLower)) {
+        let haystack = this.removeAccents(words[i]);
+        let needle = this.removeAccents(strLower);
+        if (haystack.startsWith(needle)) {
           ranges.push([index, index + words[i].length]);
         }
         index += words[i].length + 1;
       }
 
       return ranges;
+    },
+    removeAccents: function(str) {
+      let convMap = {
+        'ă': 'a',
+        'â': 'a',
+        'î': 'i',
+        'ş': 's',
+        'ţ': 't'
+      };
+      for (let i in convMap) {
+        str = str.replace(new RegExp(i, "g"), convMap[i]);
+      }
+      return str;
     },
     getRangeRanges: function(input, range) {
       return [range];

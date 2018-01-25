@@ -43,11 +43,9 @@ class Adverifier {
 
   private static function delete_db_tables() {
     global $wpdb;
-    $tables = array('statistics');
-    foreach ( $tables as $table ) {
-      $table_name = $wpdb->prefix . $table;
-      $sql = "DROP TABLE IF EXISTS $table_name;";
-      $wpdb->query( $sql );
-    }
+
+    $table_name = $wpdb->prefix . 'statistics';
+    $sql = "DROP TABLE IF EXISTS $table_name;";
+    $wpdb->query( $sql );
   }
 }
