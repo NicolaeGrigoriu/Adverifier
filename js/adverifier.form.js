@@ -46,12 +46,8 @@ jQuery(document).ready(function ($) {
       type: "post",
       url: adverifier.ajax_url,
       data: {
-<<<<<<< HEAD
         'action': adverifier.action,
         '_ajax_nonce' : adverifier._ajax_nonce,
-=======
-        'action': "adverifier_save_statistics",
->>>>>>> Issue-1
         'result': stat,
         'content': content
       },
