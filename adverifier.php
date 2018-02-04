@@ -13,8 +13,8 @@ Text Domain: advert_verifier
 */
 
 define('ADVERIFIER__PLUGIN_DIR', plugin_dir_path(__FILE__));
-require_once(ADVERIFIER__PLUGIN_DIR . 'post.adverifier.php');
-require_once(ADVERIFIER__PLUGIN_DIR . 'class.adverifier.php');
+require_once(ADVERIFIER__PLUGIN_DIR . 'adverifier.post.php');
+require_once(ADVERIFIER__PLUGIN_DIR . 'adverifier.statistics.php');
 
 if (!function_exists('add_action')) {
   echo 'Hi there!  I\'m just a plugin, not much I can do when called directly.';
@@ -26,4 +26,14 @@ add_action('plugins_loaded', 'adverifier_load_post_type');
 function adverifier_load_post_type() {
   $post = new Ads();
   $post->init();
+}
+
+// Add statistics page.
+add_action('plugins_loaded', 'adverifier_statistics_page');
+function adverifier_statistics_page() {
+  $serializer = new AdverifierStatSerializer();
+  $serializer->init();
+
+  $stats = new AdverifierStatistics(new AdverifierPage($serializer));
+  $stats->init();
 }
