@@ -57,3 +57,17 @@
   font-size: 1.5em;
   margin-top: 20px;
 }
+
+#ad-categories {
+  float: left;
+}
+
+#adverifier-statistics-wrapper {
+  margin: 15px;
+}
+
+#adverifier-statistics-container {
+  height: 400px;
+  background: white;
+  margin-top: 15px;
+}

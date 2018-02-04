@@ -5,6 +5,7 @@
  */
 
 class Ads {
+
   public function init() {
     // Register ads post and categories.
     add_action('init', array($this, 'createPostType'));
@@ -71,13 +72,14 @@ class Ads {
       'update_item'       => __('Update Ad Category'),
       'add_new_item'      => __('Add New Ad Category'),
       'new_item_name'     => __('New Ad Category'),
-      'menu_name'         => __(' Ad Categories'),
+      'menu_name'         => __('Ad Categories'),
     );
 
     // Args array.
     $args = array(
-      'labels'       => $labels,
-      'hierarchical' => TRUE,
+      'labels'                => $labels,
+      'hierarchical'          => TRUE,
+      'update_count_callback' => array(&$this, 'updatePostCount'),
     );
 
     register_taxonomy('ad_category', 'ads', $args);
@@ -115,9 +117,9 @@ class Ads {
     ));
     $categories = self::filterTerms($categories);
     wp_localize_script('Adverifier', 'adverifier', array(
-      'categories' => $categories,
-      'ajax_url'   => admin_url('admin-ajax.php'),
-      'action' => 'adverifier_save_post',
+      'categories'  => $categories,
+      'ajax_url'    => admin_url('admin-ajax.php'),
+      'action'      => 'adverifier_save_post',
       '_ajax_nonce' => 'adverifier_save_post',
     ));
   }
@@ -186,7 +188,7 @@ class Ads {
       $output .= "$message</div>";
 
       $aid = $this->saveAd($_POST['content']);
-      wp_set_object_terms($aid, array_keys($data), 'ad_category', TRUE);
+      wp_set_post_terms($aid, array_keys($data), 'ad_category', TRUE);
 
       print $output;
     }
@@ -216,5 +218,16 @@ class Ads {
     $aid = wp_insert_post($ad);
 
     return $aid;
+  }
+
+  public function updatePostCount($terms, $taxonomy) {
+    global $wpdb;
+    foreach ( (array) $terms as $term ) {
+      $count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->term_relationships WHERE term_taxonomy_id = %d", $term ) );
+
+      do_action( 'edit_term_taxonomy', $term, $taxonomy );
+      $wpdb->update( $wpdb->term_taxonomy, compact( 'count' ), array( 'term_taxonomy_id' => $term ) );
+      do_action( 'edited_term_taxonomy', $term, $taxonomy );
+    }
   }
 }
