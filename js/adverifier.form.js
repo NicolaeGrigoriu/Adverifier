@@ -22,7 +22,7 @@ jQuery(document).ready(function ($) {
         for (let i = 0; i < contentArr.length; i++) {
           let haystack = removeAccents(contentArr[i]);
           let needle = removeAccents(category);
-          if (haystack.startsWith(needle)) {
+          if (haystack.startsWith(needle) && needle.length > 1) {
             stat[cid]++;
           }
         }
