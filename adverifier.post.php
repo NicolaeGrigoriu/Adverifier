@@ -155,11 +155,11 @@ class Ads {
 
     //  $output .= '<div class="g-recaptcha" data-sitekey="6LcYxTAUAAAAAKw0L6jRU4ok-brDW3BTFInVFj_z"></div><br/>';
 
-    $output .= '<button type="submit" id="adverifier-form-submit" name="adverifier_form_submit" value="Verify Ad" class="btn medium white-col purple-bg green-bg-hover right">' . __('Verify Ad') . '</button>';
+    $output .= '<button type="submit" id="adverifier-form-submit" name="adverifier_form_submit" value="Verify Ad" class="btn medium white-col purple-bg green-bg-hover right">' . __('[:en]Verify Ad[:ro]Verifică anunțul[:ru]Проверьте обявление[:]') . '</button>';
 
     $output .= '</form>';
 
-    $popup = '<div id="adverifier-modal-results" title="' . __('Adverifier result') . '">';
+    $popup = '<div id="adverifier-modal-results" title="' . __('[:en]Adverifier result[:ro]Rezultat[:ru]Результат[:]') . '">';
     $popup .= '<div id="adverifier-result-message"></div>';
     $popup .= '</div>';
 
@@ -180,10 +180,10 @@ class Ads {
       $output = '<div id="adverifier-result-message">';
       if (empty($data)) {
         $message = '<div class="adverifier-sign adverifier-success"></div>';
-        $message .= '<div class="adverifier-message">' . __('This ad has no discriminatory words.') . '</div>';
+        $message .= '<div class="adverifier-message">' . __('[:en]This ad has no discriminatory words[:ro]Acest anunț nu conține cuvinte discriminatorii[:ru]Это обявление не содержит дискриминируюшее слова.[:]') . '</div>';
       } else {
         $message = '<div class="adverifier-sign adverifier-fail"></div>';
-        $message .= '<div class="adverifier-message">' . __('This ad has discriminatory words. Please revise your ad.') . '</div>';
+        $message .= '<div class="adverifier-message">' . __('[:en]This ad has discriminatory words[:ro]Acest anunț conține cuvinte discriminatorii[:ru]Это обявление содержит дискриминируюшее слова.[:]') . '</div>';
       }
       $output .= "$message</div>";
 
