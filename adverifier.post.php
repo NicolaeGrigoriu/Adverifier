@@ -6,6 +6,21 @@
 
 class Ads {
 
+  public static function plugin_activation() {
+    $post = array(
+      'post_title'     =>  __('[:en]Verify Ad[:ro]Verifică anunțul[:ru]Проверьте обявление[:]'),
+      'post_name'      => 'verifica-anunt',
+      'post_content'   => '<div id="adverifier-wrapper">[ad_post_form]</div>',
+      'post_status'    => 'publish',
+      'post_author'    => 1,
+      'post_type'      => 'page',
+      'comment_status' => 'closed',
+      'ping_status'    => 'closed',
+    );
+
+    wp_insert_post($post);
+  }
+
   public function init() {
     // Register ads post and categories.
     add_action('init', array($this, 'createPostType'));
