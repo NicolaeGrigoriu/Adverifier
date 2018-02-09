@@ -21,7 +21,7 @@ if (!function_exists('add_action')) {
   exit;
 }
 
-register_activation_hook(__FILE__, array('Ads', 'plugin_activation'));
+register_activation_hook(__FILE__, array('Ads', 'activate'));
 
 // Register ads post.
 add_action('plugins_loaded', 'adverifier_load_post_type');
