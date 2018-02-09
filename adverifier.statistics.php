@@ -65,6 +65,7 @@ class AdverifierPage {
       array(
         'orderby'    => 'count',
         'hide_empty' => 0,
+        'parent'     => 0,
       )
     );
 
@@ -95,11 +96,20 @@ class AdverifierStatSerializer {
     add_action('admin_post', array($this, 'action'));
   }
 
+  private function getTermChildren($tid) {
+    $children = get_term_children($tid, 'ad_category');
+    array_unshift($children, $tid);
+
+    return $children;
+  }
+
   public function getTermCount($tid, $start, $end) {
     global $wpdb;
+    $terms = $this->getTermChildren($tid);
+    $terms = "'" . implode("', '", $terms) . "'";
 
-    $query = "SELECT COUNT(*) FROM $wpdb->term_relationships INNER JOIN $wpdb->posts ON $wpdb->posts.ID = $wpdb->term_relationships.object_id WHERE $wpdb->term_relationships.term_taxonomy_id = %d";
-    $args = array($tid);
+    $query = "SELECT COUNT(*) FROM $wpdb->term_relationships INNER JOIN $wpdb->posts ON $wpdb->posts.ID = $wpdb->term_relationships.object_id WHERE $wpdb->term_relationships.term_taxonomy_id IN ({$terms})";
+    $args = array();
 
     if ($start) {
       $query .= " AND $wpdb->posts.post_date >= %s";

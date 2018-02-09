@@ -3,11 +3,14 @@
   height: initial;
   border-radius: initial;
 }
-
+.adverifier-result-title .ui-dialog-title {
+  color: #fff;
+  font-style: inherit;
+}
 .loader {
   position: absolute;
   top: 20%;
-  left: 37%;
+  left: 40%;
   border: 16px solid #f3f3f3;
   border-radius: 50%;
   border-top: 16px solid #874191;

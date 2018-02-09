@@ -5,8 +5,11 @@ jQuery(document).ready(function ($) {
 
   $('#adverifier-modal-results').dialog({
     autoOpen: false,
-    minHeight: 200
+    minHeight: 200,
+    minWidth:690,
+    dialogClass: 'adverifier-result-title'
   });
+
   $form.submit(function(event) {
     event.preventDefault();
     let $formContent = $('#adverifier-form-content');

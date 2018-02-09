@@ -6,9 +6,9 @@
 
 class Ads {
 
-  public static function plugin_activation() {
+  public static function activate() {
     $post = array(
-      'post_title'     =>  __('[:en]Verify Ad[:ro]Verifică anunțul[:ru]Проверьте обявление[:]'),
+      'post_title'     => __('[:en]Verify Ad[:ro]Verifică anunțul[:ru]Проверьте обявление[:]'),
       'post_name'      => 'verifica-anunt',
       'post_content'   => '<div id="adverifier-wrapper">[ad_post_form]</div>',
       'post_status'    => 'publish',
@@ -17,11 +17,15 @@ class Ads {
       'comment_status' => 'closed',
       'ping_status'    => 'closed',
     );
-
     wp_insert_post($post);
+
+    // Register ads post and categories.
+    self::createPostType();
+    self::createPostCategory();
+    self::createPostCategoryTerms();
   }
 
-  public function init() {
+  function init() {
     // Register ads post and categories.
     add_action('init', array($this, 'createPostType'));
     add_action('init', array($this, 'createPostCategory'));
@@ -98,6 +102,103 @@ class Ads {
     );
 
     register_taxonomy('ad_category', 'ads', $args);
+  }
+
+  public function createPostCategoryTerms() {
+    $categories = array(
+      'rasă'                                => array(),
+      'culoare'                             => array(),
+      'naţionalitate'                       => array(),
+      'origine etnică'                      => array(
+        'rom',
+        'rus',
+        'moldovean',
+        'țigan',
+        'negru',
+      ),
+      'limbă'                               => array(),
+      'religie sau convingeri'              => array(),
+      'avere'                               => array(),
+      'statut HIV+'                         => array(),
+      'domiciliu/ sediu'                    => array(),
+      'apartenență/neapartenență sindicală' => array(),
+      'origine socială'                     => array(),
+      'orientarea sexuală'                  => array(),
+      'sex'                                 => array(
+        'director',
+        'administrator',
+        'profesor',
+        'șef',
+        'băieți',
+        'domn',
+        'bucătar',
+        'paznic',
+        'ospătar',
+        'domnișoară',
+        'domniță',
+        'chelneriță',
+        'recepționistă',
+        'vânzătoare',
+        'servitoare',
+        'traducătoare',
+        'asistentă',
+        'studentă',
+        'dădacă',
+        'administratoare',
+        'infermieră',
+        'însărcinată',
+        'maseoză',
+        'femeie de serviciu',
+        'croitoreasă',
+        'absolventă',
+        'contabilă',
+        'coafeză',
+        'secretara',
+      ),
+      'vârstă'                              => array(
+        'tânăr',
+        'tânără',
+        'experiență',
+        'ani',
+      ),
+      'dizabilitate'                        => array(),
+      'stare a sănătății'                   => array(
+        'vorbire clară',
+        'voce plăcută',
+        'rezistent la stres',
+        'bună rezistență fizică',
+        'stare bună de sănătate',
+        'formă fizică bună',
+        'lipsa maladii',
+        'condiție fizică',
+        'aspect exterior',
+      ),
+      'opinie'                              => array(),
+      'apartenenţă politică'                => array(),
+      'alt criteriu similar'                => array(
+        'starea civilă',
+        'prezența copiilor',
+        'absența copiilor',
+        'poză',
+        'cazier',
+        'antecedente penale',
+        'permis auto',
+        'viză de reședință',
+        'loc de trai',
+        'cetățenie',
+        'fără vicii',
+        'zodia',
+      ),
+    );
+
+    foreach ($categories as $category => $subcategories) {
+      $term = wp_insert_term($category, 'ad_category');
+      if (!is_wp_error($term)) {
+        foreach ($subcategories as $subcategory) {
+          wp_insert_term($subcategory, 'ad_category', array('parent' => $term['term_id']));
+        }
+      }
+    }
   }
 
   /**
@@ -193,12 +294,14 @@ class Ads {
 
       // Prepare result message.
       $output = '<div id="adverifier-result-message">';
+      $url    = site_url('verifica-anunt');
+      $mail   = "mailto:info@egalitate.md?Subject=Info%20Adverifier";
       if (empty($data)) {
         $message = '<div class="adverifier-sign adverifier-success"></div>';
-        $message .= '<div class="adverifier-message">' . __('[:en]This ad has no discriminatory words[:ro]Acest anunț nu conține cuvinte discriminatorii[:ru]Это обявление не содержит дискриминируюшее слова.[:]') . '</div>';
+        $message .= '<div class="adverifier-message">' . sprintf(__('[:en]This announcement does not contain criteria that might exclude or favour certain persons. Please revise the announcement. Just in case, please consult the <a target="_blank" href="%1$s">Guide</a> on publishing recruitment advertisements or contact us via e-mail <a target="_blank" href="%2$s">info@egalitate.md</a>.[:ro]Aparent acest anunț nu conține cerințe care ar putea exclude sau favoriza anumite persoane. Pentru orice eventualitate consultați <a target="_blank" href="%1$s">Ghidul</a> privind întocmirea anunțurilor de recrutare sau adresați o întrebare pe <a target="_blank" href="%2$s">info@egalitate.md</a>.[:ru]Данное объявление не содержит пункты, препятствующие или благоприятствующие трудоустройству определенных лиц. В случае надобности, обращайтесь к <a target="_blank" href="%1$s">Гиду</a> по составлению вакансий или по почте <a target="_blank" href="%2$s">info@egalitate.md</a>.[:]'), $url, $mail) . '</div>';
       } else {
         $message = '<div class="adverifier-sign adverifier-fail"></div>';
-        $message .= '<div class="adverifier-message">' . __('[:en]This ad has discriminatory words[:ro]Acest anunț conține cuvinte discriminatorii[:ru]Это обявление содержит дискриминируюшее слова.[:]') . '</div>';
+        $message .= '<div class="adverifier-message">' . sprintf(__('[:en]This announcement contains criteria that might exclude or favour certain persons. Please revise the announcement. For more details, please consult the <a target="_blank" href="%1$s">Guide</a> on publishing recruitment advertisements or contact us via e-mail <a target="_blank" href="%2$s">info@egalitate.md</a>[:ro]Acest anunț conține cerințe care ar putea exclude sau favoriza anumite persoane. Revizuiți anunțul. Pentru detalii consultați <a target="_blank" href="%1$s">Ghidul</a> privind întocmirea anunțurilor de recrutare sau adresați o întrebare pe <a target="_blank" href="%2$s">info@egalitate.md</a>.[:ru]Данное объявление содержит пункты, препятствующие или благоприятствующие трудоустройству определенных лиц. Пересмотрите данное объявление. Для дополнительной информации предлагаем вам обратиться к <a target="_blank" href="%1$s">Гиду</a> по составлению вакансий или по почте <a target="_blank" href="%2$s">info@egalitate.md</a>.[:]'), $url, $mail) . '</div>';
       }
       $output .= "$message</div>";
 
@@ -237,12 +340,12 @@ class Ads {
 
   public function updatePostCount($terms, $taxonomy) {
     global $wpdb;
-    foreach ( (array) $terms as $term ) {
-      $count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->term_relationships WHERE term_taxonomy_id = %d", $term ) );
+    foreach ((array) $terms as $term) {
+      $count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $wpdb->term_relationships WHERE term_taxonomy_id = %d", $term));
 
-      do_action( 'edit_term_taxonomy', $term, $taxonomy );
-      $wpdb->update( $wpdb->term_taxonomy, compact( 'count' ), array( 'term_taxonomy_id' => $term ) );
-      do_action( 'edited_term_taxonomy', $term, $taxonomy );
+      do_action('edit_term_taxonomy', $term, $taxonomy);
+      $wpdb->update($wpdb->term_taxonomy, compact('count'), array('term_taxonomy_id' => $term));
+      do_action('edited_term_taxonomy', $term, $taxonomy);
     }
   }
 }
