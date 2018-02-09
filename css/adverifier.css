@@ -1,3 +1,6 @@
+#adverifier-form .g-recaptcha {
+  float: left;
+}
 #adverifier-form-submit {
   background-color: #874191;
   height: initial;

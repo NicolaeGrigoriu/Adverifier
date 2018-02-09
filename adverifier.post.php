@@ -269,7 +269,7 @@ class Ads {
     $output .= wp_nonce_field('adverifier_form_submit', 'adverifier_form_submitted');
     $output .= '<textarea id="adverifier-form-content" name="adverifier_form_content" /></textarea><br/>';
 
-    //  $output .= '<div class="g-recaptcha" data-sitekey="6LcYxTAUAAAAAKw0L6jRU4ok-brDW3BTFInVFj_z"></div><br/>';
+      $output .= '<div class="g-recaptcha" data-sitekey="6LcYxTAUAAAAAKw0L6jRU4ok-brDW3BTFInVFj_z"></div><br/>';
 
     $output .= '<button type="submit" id="adverifier-form-submit" name="adverifier_form_submit" value="Verify Ad" class="btn medium white-col purple-bg green-bg-hover right">' . __('[:en]Verify Ad[:ro]Verifică anunțul[:ru]Проверьте обявление[:]') . '</button>';
 
@@ -294,8 +294,12 @@ class Ads {
 
       // Prepare result message.
       $output = '<div id="adverifier-result-message">';
+
+      // Link to the guide.
       $url    = site_url('verifica-anunt');
+      // Info mail.
       $mail   = "mailto:info@egalitate.md?Subject=Info%20Adverifier";
+
       if (empty($data)) {
         $message = '<div class="adverifier-sign adverifier-success"></div>';
         $message .= '<div class="adverifier-message">' . sprintf(__('[:en]This announcement does not contain criteria that might exclude or favour certain persons. Please revise the announcement. Just in case, please consult the <a target="_blank" href="%1$s">Guide</a> on publishing recruitment advertisements or contact us via e-mail <a target="_blank" href="%2$s">info@egalitate.md</a>.[:ro]Aparent acest anunț nu conține cerințe care ar putea exclude sau favoriza anumite persoane. Pentru orice eventualitate consultați <a target="_blank" href="%1$s">Ghidul</a> privind întocmirea anunțurilor de recrutare sau adresați o întrebare pe <a target="_blank" href="%2$s">info@egalitate.md</a>.[:ru]Данное объявление не содержит пункты, препятствующие или благоприятствующие трудоустройству определенных лиц. В случае надобности, обращайтесь к <a target="_blank" href="%1$s">Гиду</a> по составлению вакансий или по почте <a target="_blank" href="%2$s">info@egalitate.md</a>.[:]'), $url, $mail) . '</div>';
