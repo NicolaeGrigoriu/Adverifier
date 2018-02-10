@@ -6,60 +6,74 @@ jQuery(document).ready(function ($) {
   $('#adverifier-modal-results').dialog({
     autoOpen: false,
     minHeight: 200,
-    minWidth:690,
+    minWidth: 690,
+    position: {
+      my: 'center',
+      at: 'center',
+      of: $('.page-home-top-short-menu')
+    },
     dialogClass: 'adverifier-result-title'
   });
 
-  $form.submit(function(event) {
-    event.preventDefault();
-    let $formContent = $('#adverifier-form-content');
-    let content = $formContent.val();
+  $('#adverifier-form-content').keypress(function (event) {
+    if ($(this).val().length > 0 && event.which == 13) {
+      $form.submit();
+    }
+  });
+  if ($form.val().length > 0) {
+    $form.submit(function (event) {
+      event.preventDefault();
+      let $formContent = $('#adverifier-form-content');
+      let content = $formContent.val();
 
-    // Content is validated here.
-    let contentArr = content.toLowerCase().split(' ');
-    let stat = {};
-    for (let cid in adverifier.categories) {
-      if (adverifier.categories.hasOwnProperty(cid)) {
-        let category = adverifier.categories[cid].toLowerCase();
-        stat[cid] = 0;
-        for (let i = 0; i < contentArr.length; i++) {
-          let haystack = removeAccents(contentArr[i]);
-          let needle = removeAccents(category);
-          if (haystack.startsWith(needle) && needle.length > 1) {
-            stat[cid]++;
+      // Content is validated here.
+      let contentArr = content.toLowerCase().split(' ');
+      let stat = {};
+      for (let cid in adverifier.categories) {
+        if (adverifier.categories.hasOwnProperty(cid)) {
+          let category = adverifier.categories[cid].toLowerCase();
+          stat[cid] = 0;
+          for (let i = 0; i < contentArr.length; i++) {
+            let haystack = removeAccents(contentArr[i]);
+            let needle = removeAccents(category);
+            if (haystack.startsWith(needle) && needle.length > 1) {
+              stat[cid]++;
+            }
           }
         }
       }
-    }
 
-    // Convert object properties to array values.
-    let arr = Object.keys(adverifier.categories).map(function (key) { return adverifier.categories[key]; });
+      // Convert object properties to array values.
+      let arr = Object.keys(adverifier.categories).map(function (key) {
+        return adverifier.categories[key];
+      });
 
-    // Highlight matched words.
-    $formContent.highlightWithinTextarea({
-      highlight: arr
+      // Highlight matched words.
+      $formContent.highlightWithinTextarea({
+        highlight: arr
+      });
+
+      // Open popup with loader.
+      $('#adverifier-modal-results').dialog('open');
+      $('#adverifier-result-message').replaceWith('<div class="loader"></div>');
+
+      // Save data and expose the result.
+      $.ajax({
+        type: "post",
+        url: adverifier.ajax_url,
+        data: {
+          'action': adverifier.action,
+          '_ajax_nonce': adverifier._ajax_nonce,
+          'result': stat,
+          'content': content
+        },
+        success: function (response) {
+          // Populate popup with data from statistics.
+          $('#adverifier-modal-results').find('.loader').replaceWith(response);
+        }
+      });
     });
-
-    // Open popup with loader.
-    $('#adverifier-modal-results').dialog('open');
-    $('#adverifier-result-message').replaceWith('<div class="loader"></div>');
-
-    // Save data and expose the result.
-    $.ajax({
-      type: "post",
-      url: adverifier.ajax_url,
-      data: {
-        'action': adverifier.action,
-        '_ajax_nonce' : adverifier._ajax_nonce,
-        'result': stat,
-        'content': content
-      },
-      success: function (response) {
-        // Populate popup with data from statistics.
-        $('#adverifier-modal-results').find('.loader').replaceWith(response);
-      }
-    });
-  });
+  }
 
   function removeAccents(str) {
     let convMap = {
