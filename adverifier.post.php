@@ -98,7 +98,6 @@ class Ads {
     $args = array(
       'labels'                => $labels,
       'hierarchical'          => TRUE,
-      'update_count_callback' => array(&$this, 'updatePostCount'),
     );
 
     register_taxonomy('ad_category', 'ads', $args);
@@ -217,7 +216,6 @@ class Ads {
    * Main functionality on the form submit.
    */
   public static function postFormShortcode() {
-    wp_register_script();
     wp_enqueue_script('Adverifier', plugins_url('js/adverifier.form.js', __FILE__), array(), NULL, TRUE);
     wp_enqueue_script('Highlighter', plugins_url('js/highlight.js', __FILE__), array(), NULL, TRUE);
 
@@ -269,7 +267,7 @@ class Ads {
     $output .= wp_nonce_field('adverifier_form_submit', 'adverifier_form_submitted');
     $output .= '<textarea id="adverifier-form-content" name="adverifier_form_content" /></textarea><br/>';
 
-      $output .= '<div class="g-recaptcha" data-sitekey="6LcYxTAUAAAAAKw0L6jRU4ok-brDW3BTFInVFj_z"></div><br/>';
+    $output .= '<div class="g-recaptcha" data-sitekey="6LcYxTAUAAAAAKw0L6jRU4ok-brDW3BTFInVFj_z"></div><br/>';
 
     $output .= '<button type="submit" id="adverifier-form-submit" name="adverifier_form_submit" value="Verify Ad" class="btn medium white-col purple-bg green-bg-hover right">' . __('[:en]Verify Ad[:ro]Verifică anunțul[:ru]Проверьте обявление[:]') . '</button>';
 
@@ -340,16 +338,5 @@ class Ads {
     $aid = wp_insert_post($ad);
 
     return $aid;
-  }
-
-  public function updatePostCount($terms, $taxonomy) {
-    global $wpdb;
-    foreach ((array) $terms as $term) {
-      $count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $wpdb->term_relationships WHERE term_taxonomy_id = %d", $term));
-
-      do_action('edit_term_taxonomy', $term, $taxonomy);
-      $wpdb->update($wpdb->term_taxonomy, compact('count'), array('term_taxonomy_id' => $term));
-      do_action('edited_term_taxonomy', $term, $taxonomy);
-    }
   }
 }

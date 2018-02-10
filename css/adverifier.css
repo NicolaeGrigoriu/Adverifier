@@ -1,3 +1,6 @@
+.body .page-home-top-short-menu ul#menu-home-top-short-menu li {
+  width: 25%;
+}
 #adverifier-form .g-recaptcha {
   float: left;
 }

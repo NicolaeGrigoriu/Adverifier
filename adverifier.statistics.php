@@ -43,7 +43,6 @@ class AdverifierPage {
 
   // Load js scripts.
   public function loadScripts() {
-    wp_register_script();
     wp_enqueue_script('AdverifierStats', plugins_url('js/adverifier.statistics.js', __FILE__), array(), NULL, TRUE);
 
     wp_register_script('ChartJS', 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js', NULL, NULL, TRUE);
