@@ -8,7 +8,7 @@ class Ads {
 
   public static function activate() {
     $post = array(
-      'post_title'     => __('[:en]Verify Ad[:ro]Verifică anunțul[:ru]Проверьте обявление[:]'),
+      'post_title'     => __('[:en]Verify Ad[:ro]Verifică anunțul[:ru]Проверьте объявление[:]'),
       'post_name'      => 'verifica-anunt',
       'post_content'   => '<div id="adverifier-wrapper">[ad_post_form]</div>',
       'post_status'    => 'publish',
@@ -294,16 +294,16 @@ class Ads {
       $output = '<div id="adverifier-result-message">';
 
       // Link to the guide.
-      $url    = site_url('verifica-anunt');
+      $url = site_url('wp-content/uploads/2016/04/Ghid-practic_pentru-web.pdf');
       // Info mail.
       $mail   = "mailto:info@egalitate.md?Subject=Info%20Adverifier";
 
       if (empty($data)) {
         $message = '<div class="adverifier-sign adverifier-success"></div>';
-        $message .= '<div class="adverifier-message">' . sprintf(__('[:en]This announcement does not contain criteria that might exclude or favour certain persons. Please revise the announcement. Just in case, please consult the <a target="_blank" href="%1$s">Guide</a> on publishing recruitment advertisements or contact us via e-mail <a target="_blank" href="%2$s">info@egalitate.md</a>.[:ro]Aparent acest anunț nu conține cerințe care ar putea exclude sau favoriza anumite persoane. Pentru orice eventualitate consultați <a target="_blank" href="%1$s">Ghidul</a> privind întocmirea anunțurilor de recrutare sau adresați o întrebare pe <a target="_blank" href="%2$s">info@egalitate.md</a>.[:ru]Данное объявление не содержит пункты, препятствующие или благоприятствующие трудоустройству определенных лиц. В случае надобности, обращайтесь к <a target="_blank" href="%1$s">Гиду</a> по составлению вакансий или по почте <a target="_blank" href="%2$s">info@egalitate.md</a>.[:]'), $url, $mail) . '</div>';
+        $message .= '<div class="content-style adverifier-message">' . sprintf(__('[:en]This announcement does not contain criteria that might exclude or favour certain persons. Please revise the announcement. Just in case, please consult the <a target="_blank" href="%1$s">Guide on publishing recruitment advertisements</a> or contact us via e-mail <a target="_blank" href="%2$s">info@egalitate.md</a>.[:ro]Aparent acest anunț nu conține cerințe care ar putea exclude sau favoriza anumite persoane. Pentru orice eventualitate consultați <a target="_blank" href="%1$s">Ghidul privind întocmirea anunțurilor de recrutare</a> sau adresați o întrebare pe <a target="_blank" href="%2$s">info@egalitate.md</a>.[:ru]Данное объявление не содержит пункты, препятствующие или благоприятствующие трудоустройству определенных лиц. В случае надобности, обращайтесь к <a target="_blank" href="%1$s">Гиду по составлению вакансий</a> или по почте <a target="_blank" href="%2$s">info@egalitate.md</a>.[:]'), $url, $mail) . '</div>';
       } else {
         $message = '<div class="adverifier-sign adverifier-fail"></div>';
-        $message .= '<div class="adverifier-message">' . sprintf(__('[:en]This announcement contains criteria that might exclude or favour certain persons. Please revise the announcement. For more details, please consult the <a target="_blank" href="%1$s">Guide</a> on publishing recruitment advertisements or contact us via e-mail <a target="_blank" href="%2$s">info@egalitate.md</a>[:ro]Acest anunț conține cerințe care ar putea exclude sau favoriza anumite persoane. Revizuiți anunțul. Pentru detalii consultați <a target="_blank" href="%1$s">Ghidul</a> privind întocmirea anunțurilor de recrutare sau adresați o întrebare pe <a target="_blank" href="%2$s">info@egalitate.md</a>.[:ru]Данное объявление содержит пункты, препятствующие или благоприятствующие трудоустройству определенных лиц. Пересмотрите данное объявление. Для дополнительной информации предлагаем вам обратиться к <a target="_blank" href="%1$s">Гиду</a> по составлению вакансий или по почте <a target="_blank" href="%2$s">info@egalitate.md</a>.[:]'), $url, $mail) . '</div>';
+        $message .= '<div class="content-style adverifier-message">' . sprintf(__('[:en]This announcement contains criteria that might exclude or favour certain persons. Please revise the announcement. For more details, please consult the <a target="_blank" href="%1$s">Guide on publishing recruitment advertisements</a> or contact us via e-mail <a target="_blank" href="%2$s">info@egalitate.md</a>[:ro]Acest anunț conține cerințe care ar putea exclude sau favoriza anumite persoane. Revizuiți anunțul. Pentru detalii consultați <a target="_blank" href="%1$s">Ghidul privind întocmirea anunțurilor de recrutare</a> sau adresați o întrebare pe <a target="_blank" href="%2$s">info@egalitate.md</a>.[:ru]Данное объявление содержит пункты, препятствующие или благоприятствующие трудоустройству определенных лиц. Пересмотрите данное объявление. Для дополнительной информации предлагаем вам обратиться к <a target="_blank" href="%1$s">Гиду по составлению вакансий</a> или по почте <a target="_blank" href="%2$s">info@egalitate.md</a>.[:]'), $url, $mail) . '</div>';
       }
       $output .= "$message</div>";
 

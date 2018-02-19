@@ -63,7 +63,14 @@
   font-size: 1.5em;
   margin-top: 20px;
 }
-
+.adverifier-message a {
+  color: #874191 !important;
+  font-weight: 400;
+  -webkit-transition: 300ms all ease-in-out;
+  -moz-transition: 300ms all ease-in-out;
+  -ms-transition: 300ms all ease-in-out;
+  -o-transition: 300ms all ease-in-out;
+}
 #ad-categories {
   float: left;
 }
