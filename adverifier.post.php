@@ -250,7 +250,9 @@ class Ads {
   public static function filterTerms($categories) {
     $terms = array();
     foreach ($categories as $category) {
-      $terms[$category->term_id] = $category->name;
+      if (!empty($category->name)) {
+        $terms[$category->term_id] = $category->name;
+      }
     }
 
     return $terms;
