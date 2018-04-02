@@ -17,18 +17,17 @@ jQuery(document).ready(function ($) {
     let content = $formContent.val();
 
     // Content is validated here.
-    let contentArr = content.toLowerCase().split(' ');
+    let filterContent = content.toLowerCase();
+    filterContent = removeAccents(filterContent);
+
     let stat = {};
     for (let cid in adverifier.categories) {
       if (adverifier.categories.hasOwnProperty(cid)) {
         let category = adverifier.categories[cid].toLowerCase();
         stat[cid] = 0;
-        for (let i = 0; i < contentArr.length; i++) {
-          let haystack = removeAccents(contentArr[i]);
-          let needle = removeAccents(category);
-          if (haystack.startsWith(needle) && needle.length > 1) {
-            stat[cid]++;
-          }
+        let needle = removeAccents(category);
+        if (filterContent.includes(needle)) {
+          stat[cid]++;
         }
       }
     }
@@ -39,9 +38,13 @@ jQuery(document).ready(function ($) {
     });
 
     // Highlight matched words.
-    $formContent.highlightWithinTextarea({
+/*    $formContent.highlightWithinTextarea({
       highlight: arr
+    });*/
+    $formContent.highlightWithinTextarea({
+      highlight: ['voce placuta', 'ani']
     });
+
 
     // Open popup with loader.
     $('#adverifier-modal-results').dialog('open');
@@ -69,8 +72,8 @@ jQuery(document).ready(function ($) {
       'ă': 'a',
       'â': 'a',
       'î': 'i',
-      'ş': 's',
-      'ţ': 't'
+      'ș': 's',
+      'ț': 't'
     };
     for (let i in convMap) {
       str = str.replace(new RegExp(i, "g"), convMap[i]);

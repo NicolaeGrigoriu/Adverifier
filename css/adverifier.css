@@ -51,12 +51,12 @@
 
 .adverifier-success {
   background-repeat: no-repeat;
-  background-image: url('/wp-content/plugins/adverifier/images/success.svg');
+  background-image: url('../images/success.svg');
 }
 
 .adverifier-fail {
   background-repeat: no-repeat;
-  background-image: url('/wp-content/plugins/adverifier/images/fail.svg');
+  background-image: url('../images/fail.svg');
 }
 
 .adverifier-message {
