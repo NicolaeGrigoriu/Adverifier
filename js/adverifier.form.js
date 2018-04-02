@@ -38,11 +38,8 @@ jQuery(document).ready(function ($) {
     });
 
     // Highlight matched words.
-/*    $formContent.highlightWithinTextarea({
-      highlight: arr
-    });*/
     $formContent.highlightWithinTextarea({
-      highlight: ['voce placuta', 'ani']
+      highlight: arr
     });
 
 

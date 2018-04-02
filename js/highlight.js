@@ -225,8 +225,8 @@
         'ă': 'a',
         'â': 'a',
         'î': 'i',
-        'ş': 's',
-        'ţ': 't'
+        'ș': 's',
+        'ț': 't'
       };
       for (let i in convMap) {
         str = str.replace(new RegExp(i, "g"), convMap[i]);
