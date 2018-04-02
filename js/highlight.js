@@ -204,29 +204,29 @@
 
     getStringRanges: function(input, str) {
       let ranges = [];
-      let strLower = str.toLowerCase();
       let index = 0;
 
-      let inputLower = input.toLowerCase();
-      let words = inputLower.split(' ');
-      for (let i = 0; i < words.length; i++) {
-        let haystack = this.removeAccents(words[i]);
-        let needle = this.removeAccents(strLower);
-        if (haystack.startsWith(needle)) {
-          ranges.push([index, index + words[i].length]);
+      input = this.removeAccents(input.toLowerCase()) + ' ';
+      str = this.removeAccents(str.toLowerCase());
+
+      while (index >= 0 && index + str.length <= input.length) {
+        if (input.startsWith(str, index)) {
+          ranges.push([index, index + str.length]);
+          index += str.length;
         }
-        index += words[i].length + 1;
+        index = input.indexOf(' ', index) + 1;
       }
 
       return ranges;
     },
+
     removeAccents: function(str) {
       let convMap = {
         'ă': 'a',
         'â': 'a',
         'î': 'i',
-        'ş': 's',
-        'ţ': 't'
+        'ș': 's',
+        'ț': 't'
       };
       for (let i in convMap) {
         str = str.replace(new RegExp(i, "g"), convMap[i]);
