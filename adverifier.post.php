@@ -273,8 +273,11 @@ class Ads {
 
     $output .= '<button type="submit" id="adverifier-form-submit" name="adverifier_form_submit" value="Verify Ad" class="btn medium white-col purple-bg green-bg-hover right">' . __('[:en]Verify Ad[:ro]Verifică anunțul[:ru]Проверьте обявление[:]') . '</button>';
 
-    $output .= '</form>';
 
+    $output .= '<div class="white-bg cf content-style padding-15 adverifier-annotation">' . __('[:en]The project is implemented by the Council for Preventing and Eliminating Discrimination and Ensuring Equality in Partnership with the Institute for Penal Reform within the project “Strengthening the technical capacities of national institutions for the promotion and protection of human rights” financed by the Ministry of Foreign Affairs of Denmark and implemented by the United Nations Development Program.[:ro]Această aplicație a fost elaborată de Consiliul pentru prevenirea și eliminarea discriminării și asigurarea egalității cu participarea Institutului de Reforme Penale în cadrul Proiectului „Consolidarea capacităților tehnice ale instituțiilor naționale pentru promovarea și protecția drepturilor omului”, finanțat de Ministerul Afacerilor Externe al Danemarcei și implementat de programul Națiunilor Unite pentru Dezvoltare.[:ru]Данный материал был разработан Советом по предупреждению и ликвидации дискриминации и обеспечению равенства при содействии Института Уголовных Реформ в рамках проекта «Консолидация технического потенциала национальных учреждений по защите и продвижению прав человека», финансируемого Министерством иностранных дел Дании и внедряемого Программой Развития Организации Объединенных Наций.[:]') .
+      '</div>';
+
+    $output .= '</form>';
     $popup = '<div id="adverifier-modal-results" title="' . __('[:en]Adverifier result[:ro]Rezultat[:ru]Результат[:]') . '">';
     $popup .= '<div id="adverifier-result-message"></div>';
     $popup .= '</div>';
